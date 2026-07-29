@@ -1,38 +1,46 @@
 # Portfolio Customization Quick Reference
 
-The application has not been initialized yet. The paths below are the approved proposed locations; they will be confirmed or adjusted when the relevant milestone creates them.
+Use this page for common edits. For detailed explanations and exact examples, see the [Milestone 1 Guide](./guides/MILESTONE_1_GUIDE.md).
 
-For the current repository state and missing information, see [PROJECT_CONTEXT.md](./PROJECT_CONTEXT.md). For the reasoning behind the setup, see the [Milestone 0 Guide](./guides/MILESTONE_0_GUIDE.md).
+## Current common edits
 
-## Planned common edits
-
-| Change | Planned file and location |
+| Change | File and exact location |
 | --- | --- |
-| Update name, title, summary, education, or experience | `src/data/portfolio.ts`, in the corresponding exported content property or array |
-| Add, edit, reorder, or remove skills | `src/data/portfolio.ts`, in the planned `skills` array |
-| Add, edit, reorder, or remove projects | `src/data/portfolio.ts`, in the planned `projects` array; ApplyWiseAI should remain the primary item unless intentionally changed |
-| Change email, GitHub, or LinkedIn links | `src/data/portfolio.ts`, in the planned `contact` object |
-| Replace the resume | Replace `public/assets/resume/Genesis-Clabisellas-Resume.pdf` with an updated file using the same filename, or update the matching resume path in `src/data/portfolio.ts` |
-| Replace a project image or portrait | Add the user-provided file under `public/assets/images/`, then update the matching image path in `src/data/portfolio.ts` |
-| Change colors, type, spacing, borders, or layout | `src/styles/global.css`; design tokens will be stored in the `:root` selector and component rules will use named classes |
-| Reorder page sections | `src/App.tsx`, by moving section component elements |
-| Temporarily hide a section | `src/App.tsx`, by removing or commenting out that section component; restore it in the same page position |
-| Change desktop or mobile behavior | `src/styles/global.css`, in the relevant component selector and media query |
+| Change the displayed name or initials | `src/data/portfolio.ts`, `portfolio.name` and `portfolio.shortName` |
+| Change the main hero title | `src/data/portfolio.ts`, `portfolio.professionalTitle` |
+| Change the hero introduction | `src/data/portfolio.ts`, `portfolio.introduction` |
+| Change the hero eyebrow | `src/data/portfolio.ts`, `portfolio.hero.eyebrow` |
+| Change hero or snapshot button text and destination | `src/data/portfolio.ts`, `portfolio.hero.primaryAction` and `portfolio.hero.secondaryAction` |
+| Change navigation labels, order, or destinations | `src/data/portfolio.ts`, `portfolio.navigation` |
+| Change snapshot facts | `src/data/portfolio.ts`, `portfolio.snapshot` |
+| Add verified resume, GitHub, LinkedIn, or email destinations | `src/data/portfolio.ts`, `portfolio.links` |
+| Change colors, fonts, spacing, borders, shadows, or content width | `src/styles/global.css`, the custom properties in `:root` |
+| Change hero sizing or layout | `src/styles/global.css`, `.hero`, `.hero__inner`, `.hero__content`, and the media queries |
+| Change the mobile menu's visual behavior | `src/styles/global.css`, `.menu-button`, `.site-nav__mobile`, and the `64rem` breakpoint |
+| Change the mobile menu's interaction behavior | `src/components/layout/SiteHeader.tsx`, the `isMenuOpen` state, event handlers, and effects |
+| Add a verified photograph later | Add the file under `public/assets/images/`, add its path to `src/data/portfolio.ts`, render it in `HeroSection.tsx`, and adjust `.developer-card` styles |
 
-## Current-stage edits
+## Navigation availability
 
-Until Milestone 1 is approved and initialized:
+Each item in `portfolio.navigation` has:
 
-- Update verified facts and missing-information notes in `docs/PROJECT_CONTEXT.md`.
-- Update the proposed structure in `docs/PROJECT_MAP.md` only if the architecture decision changes.
-- Do not create the planned `src/` or `public/` files piecemeal; initialization will establish a consistent React + TypeScript Vite base.
+- `availability: 'available'` and a real `href` when its destination exists.
+- `availability: 'planned'` and `href: null` while its section is not implemented.
+
+Do not give a planned item a fake `#section` destination. When a later section is added, create its matching `id`, change the navigation item's `href`, and set its availability to `available`.
+
+## External links and resume
+
+`portfolio.links.resume`, `github`, `linkedIn`, and `email` are currently `null` because no verified destinations are available. Add only confirmed destinations:
+
+- Use a complete `https://` URL for profiles.
+- Use a `mailto:` link for email.
+- Put a supplied resume in `public/assets/resume/` and use its public path, such as `/assets/resume/Genesis-Clabisellas-Resume.pdf`.
+- Add a visible button only after the destination exists.
 
 ## Content safety
 
-- Do not replace a labelled placeholder with an unverified claim.
-- Treat the resume, once provided, as authoritative for education, experience, skills, and contact details.
-- Keep external links as complete `https://` URLs and email links in `mailto:` form.
-- Keep a backup copy of the resume filename when replacing the downloadable asset.
-
-Each later milestone guide will add exact property names and CSS selectors only after those items exist in the code.
-
+- Do not replace `null` with an invented link.
+- Do not add education, work history, skills, project outcomes, statistics, or qualifications without an authoritative source.
+- Keep the title and introduction aligned with `docs/PROJECT_CONTEXT.md`.
+- After any edit, run `npm run lint`, `npm run typecheck`, and `npm run build`.
