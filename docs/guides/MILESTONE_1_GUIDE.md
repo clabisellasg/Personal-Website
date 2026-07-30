@@ -39,7 +39,7 @@ The result is a frontend-only single page. It has no backend, database, authenti
 | `src/App.tsx` | Renders the skip link, `SiteHeader`, and `HeroSection` in page order. |
 | `src/types/portfolio.ts` | Defines `NavigationItem`, `PortfolioLink`, and `PortfolioContent`. |
 | `src/data/portfolio.ts` | Exports `portfolio`, the single source for current personal text, navigation, actions, missing-link placeholders, and snapshot facts. |
-| `src/components/layout/SiteHeader.tsx` | Defines `SiteHeader` and its local `NavigationItems` helper. It controls the mobile menu and renders available versus planned navigation. |
+| `src/components/layout/SiteHeader.tsx` | Defines `SiteHeader` and its local `NavigationItems` helper. It controls the mobile menu, renders available versus planned navigation, and tracks the active section. |
 | `src/components/sections/HeroSection.tsx` | Defines `HeroSection`, the main heading, introduction, action, developer snapshot, and decorative elements. |
 | `src/styles/global.css` | Defines the reset, tokens, global styles, component styles, breakpoints, and reduced-motion behavior. |
 
@@ -93,13 +93,13 @@ StrictMode
 ### React concepts
 
 - **Components:** `SiteHeader` and `HeroSection` are functions that return JSX.
-- **State:** `isMenuOpen` stores whether the mobile menu is open. `setIsMenuOpen` changes it.
-- **Event handlers:** the menu button's `onClick` toggles the menu; navigation links call `closeMenu`.
-- **Effects:** one `useEffect` listens for Escape. Another listens for the `64rem` desktop breakpoint and closes a mobile menu left open during resizing.
+- **State:** `isMenuOpen` stores whether the mobile menu is open. `activeHref` stores the fragment for the section currently below the sticky header.
+- **Event handlers:** the menu button's `onClick` toggles the menu. Mobile navigation links use `handleMobileNavigate` to close the overlay before scrolling to the selected section.
+- **Effects:** one `useEffect` listens for Escape. Another listens for the `64rem` desktop breakpoint and closes a mobile menu left open during resizing. A third listens for scrolling, resizing, and hash changes and updates the active navigation link through `requestAnimationFrame`.
 - **Refs:** `menuButtonRef` lets Escape return keyboard focus to the menu button.
 - **Conditional rendering:** `{isMenuOpen && (...)}` adds the mobile panel only when it is open. `{hero.secondaryAction && (...)}` omits the secondary action while its value is `null`.
 - **List rendering:** `items.map(...)` and `snapshot.map(...)` create repeated navigation items and definition-list facts.
-- **Props:** `NavigationItemsProps` describes the values passed into `NavigationItems`.
+- **Props:** `NavigationItemsProps` describes the items, active fragment, and optional navigation callback passed into `NavigationItems`.
 
 ### TypeScript concepts
 
@@ -152,6 +152,8 @@ A future section uses:
 
 To activate a future item, first render a section with the matching `id`, then replace `null` with that fragment destination and change `planned` to `available`. Reorder the objects to reorder both desktop and mobile navigation. Remove an object to remove that item from both.
 
+Available fragment links are collected by `availableSectionLinks` in `SiteHeader.tsx`. Keep their order aligned with the rendered sections. The active-section effect compares each section's top edge with the bottom of the visible navigation area, including the expanded mobile panel, and passes `activeHref` into both navigation versions. The matching link receives `aria-current="location"`; `src/styles/global.css` uses that attribute to draw the existing cyan underline.
+
 ### Change buttons and external links
 
 Edit `portfolio.hero.primaryAction` in `src/data/portfolio.ts` to change the visible primary button:
@@ -199,7 +201,7 @@ Edit these `:root` properties in `src/styles/global.css`:
 - `--space-1` through `--space-9` control reusable spacing.
 - `--container-width` controls the wide-desktop content limit.
 - `--container-gutter` controls the side space between content and the viewport.
-- `--header-height` controls the navigation height and related hero calculation.
+- `--header-height` controls the sticky navigation height, the global anchor offset, and the related hero and section height calculations.
 
 Changing a shared spacing token affects every selector that uses it. Make small changes and check both `20rem` and wide viewports.
 
@@ -223,13 +225,15 @@ Interaction logic is in `src/components/layout/SiteHeader.tsx`.
 
 - `isMenuOpen` is the open state.
 - The `menu-button` `onClick` toggles the state.
-- `closeMenu` closes it after an available link is selected.
+- `handleMobileNavigate` prevents the browser from measuring the target while the overlay is still open, closes the menu, then scrolls to the section on the next animation frame.
 - The first `useEffect` closes on Escape and focuses `menuButtonRef`.
 - The second `useEffect` closes the mobile panel when the viewport crosses the `64rem` desktop breakpoint.
 - `aria-expanded={isMenuOpen}` reports the correct state to assistive technology.
 - `aria-controls="mobile-navigation"` connects the button to the panel.
 
 Visual behavior is in `.menu-button`, `.site-nav__mobile`, and `.site-nav__mobile .site-nav__list` in `src/styles/global.css`. The desktop switch is the `@media (min-width: 64rem)` rule. If that breakpoint changes, update the `window.matchMedia('(min-width: 64rem)')` value in `SiteHeader.tsx` to match exactly.
+
+The header remains visible while scrolling because `.site-header` uses `position: sticky` and `top: 0`. The `html` selector uses `scroll-padding-top: var(--header-height)` for smooth fragment navigation. Keep one global offset; adding another `scroll-margin-top` to section targets would stack the offsets and position sections too low.
 
 ### Change the photograph or visual area
 
@@ -299,6 +303,7 @@ Open the exact local URL printed by Vite and check:
 11. Check the browser console for errors.
 12. Check the Network panel for missing files. A blocked Google Fonts request should fall back to local fonts without breaking layout.
 13. Enable reduced motion in the operating system or browser tools and confirm scrolling is no longer smooth.
+14. Scroll through Home, About, and Skills and confirm the cyan underline follows the current section in both desktop and mobile navigation.
 
 ## 9. Common problems and likely fixes
 
@@ -308,7 +313,8 @@ Open the exact local URL printed by Vite and check:
 - **A planned navigation item looks clickable:** confirm its `href` is `null` in `portfolio.navigation`.
 - **A new section link does nothing:** confirm the `href` fragment and rendered element `id` match exactly.
 - **The mobile menu does not close at desktop width:** confirm both the CSS breakpoint and `matchMedia` string remain `64rem`.
-- **The menu stays open after selection:** confirm the available anchor still uses `onClick={onNavigate}` and the mobile `NavigationItems` receives `onNavigate={closeMenu}`.
+- **The menu stays open or the final section lands too low after selection:** confirm the available anchor still calls `onNavigate` and the mobile `NavigationItems` receives `onNavigate={handleMobileNavigate}`.
+- **The indicator stays on Home:** confirm each available navigation `href` matches a rendered section `id`, the navigation order matches the section order, and the active-section scroll effect remains in `SiteHeader.tsx`.
 - **The page overflows horizontally:** inspect recent fixed widths; preserve flexible grid tracks and the narrow-layout rules under `@media (max-width: 24rem)`.
 - **Fonts look different:** check the Google Fonts request; the design intentionally falls back to Segoe UI and Cascadia Code.
 - **The production page is blank:** run `npm run build`, read the first error, and confirm `index.html` still loads `/src/main.tsx`.

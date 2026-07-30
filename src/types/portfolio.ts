@@ -9,6 +9,16 @@ export type PortfolioLink = {
   href: string
 }
 
+export type AboutHighlight = {
+  title: string
+  description: string
+}
+
+export type SkillGroup = {
+  title: string
+  skills: string[]
+}
+
 export type PortfolioContent = {
   name: string
   shortName: string
@@ -30,4 +40,16 @@ export type PortfolioContent = {
     label: string
     value: string
   }>
+  about: {
+    label: string
+    heading: string
+    paragraphs: string[]
+    highlights: AboutHighlight[]
+  }
+  skills: {
+    label: string
+    heading: string
+    introduction: string
+    groups: SkillGroup[]
+  }
 }
