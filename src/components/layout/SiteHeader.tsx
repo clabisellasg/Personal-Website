@@ -15,6 +15,10 @@ const availableSectionLinks = portfolio.navigation.flatMap((item) =>
     : [],
 )
 
+const hasPlannedNavigationItems = portfolio.navigation.some(
+  (item) => item.availability === 'planned',
+)
+
 function NavigationItems({
   items,
   activeHref,
@@ -219,9 +223,11 @@ export function SiteHeader() {
                 activeHref={activeHref}
                 onNavigate={handleMobileNavigate}
               />
-              <p className="site-nav__note">
-                Additional sections will become available in later milestones.
-              </p>
+              {hasPlannedNavigationItems && (
+                <p className="site-nav__note">
+                  Additional sections will become available in later milestones.
+                </p>
+              )}
             </div>
           )}
         </nav>

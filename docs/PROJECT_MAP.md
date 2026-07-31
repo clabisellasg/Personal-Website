@@ -1,6 +1,6 @@
 # Project Map
 
-This map describes the application after Milestone 3. Files for later website sections do not exist yet.
+This map describes the application after Milestone 4.
 
 ## Current structure
 
@@ -14,15 +14,25 @@ Personal-Website/
 │       ├── MILESTONE_0_GUIDE.md
 │       ├── MILESTONE_1_GUIDE.md
 │       ├── MILESTONE_2_GUIDE.md
-│       └── MILESTONE_3_GUIDE.md
+│       ├── MILESTONE_3_GUIDE.md
+│       └── MILESTONE_4_GUIDE.md
+├── public/
+│   └── assets/
+│       └── resume/
+│           └── genesis-clabisellas-resume.pdf
 ├── src/
 │   ├── components/
 │   │   ├── layout/
+│   │   │   ├── SiteFooter.tsx
 │   │   │   └── SiteHeader.tsx
 │   │   └── sections/
 │   │       ├── AboutSection.tsx
+│   │       ├── ContactSection.tsx
+│   │       ├── EducationSection.tsx
+│   │       ├── ExperienceSection.tsx
 │   │       ├── HeroSection.tsx
 │   │       ├── ProjectsSection.tsx
+│   │       ├── ResumeSection.tsx
 │   │       └── SkillsSection.tsx
 │   ├── data/
 │   │   └── portfolio.ts
@@ -32,42 +42,33 @@ Personal-Website/
 │   │   └── portfolio.ts
 │   ├── App.tsx
 │   └── main.tsx
-├── .gitignore
-├── eslint.config.js
-├── index.html
-├── package-lock.json
 ├── package.json
-├── tsconfig.app.json
-├── tsconfig.json
-├── tsconfig.node.json
+├── package-lock.json
 └── vite.config.ts
 ```
 
-`node_modules/` and `dist/` are generated locally and ignored by Git. There is no `public/` folder because no verified resume, photograph, or project image is available.
+Generated `node_modules/` and `dist/` directories are ignored by Git.
 
 ## Current files
 
 | Path | Purpose |
 | --- | --- |
-| `index.html` | Supplies page metadata and the root element where React mounts. |
-| `src/main.tsx` | Loads `global.css` and renders `App` into the root element. |
-| `src/App.tsx` | Defines the current page order: skip link, header, hero, About, Skills, and Projects. |
-| `src/components/layout/SiteHeader.tsx` | Renders the logo, desktop navigation, accessible mobile menu, planned-item labels, active-section indicator, Escape handling, and menu-close behavior. |
-| `src/components/sections/HeroSection.tsx` | Renders the verified title, introduction, call-to-action, decorative layer, and developer snapshot. |
-| `src/components/sections/AboutSection.tsx` | Renders the About heading, biography paragraphs, and accessible highlight list from `portfolio.about`. |
-| `src/components/sections/SkillsSection.tsx` | Renders the Skills heading and accessible nested category and skill lists from `portfolio.skills`. |
-| `src/components/sections/ProjectsSection.tsx` | Defines `ProjectsSection`, reusable cards and visuals, carousel controls and input handling, and the accessible project dialog generated from `portfolio.projects`. |
-| `src/data/portfolio.ts` | Central editable content for identity, navigation, hero, About, Skills, Projects, actions, link placeholders, and snapshot facts. |
-| `src/types/portfolio.ts` | TypeScript shapes for navigation, links, About highlights, skill groups, projects, images, and complete portfolio content. |
-| `src/styles/global.css` | Reset, design tokens, global layout, horizontal carousel and project dialog styles, breakpoints, focus states, animations, and reduced-motion behavior. |
-| `package.json` | Dependency list and the `dev`, `lint`, `typecheck`, `build`, and `preview` commands. |
-| `package-lock.json` | Exact installed npm dependency tree. |
-| `vite.config.ts` | Vite configuration with the React plugin. |
-| `eslint.config.js` | TypeScript, React Hooks, and React Refresh lint rules. |
-| `tsconfig*.json` | Strict TypeScript configuration for application and Vite files. |
-| `docs/guides/MILESTONE_1_GUIDE.md` | Detailed implementation and customization guide for the approved navigation and hero. |
-| `docs/guides/MILESTONE_2_GUIDE.md` | Detailed implementation and customization guide for the approved About and Skills sections. |
-| `docs/guides/MILESTONE_3_GUIDE.md` | Detailed Projects implementation, customization, testing, troubleshooting, exercises, and glossary. |
+| `src/App.tsx` | Defines the page order: header, Hero, About, Skills, Projects, Experience, Education, Resume, Contact, and Footer. |
+| `src/components/layout/SiteHeader.tsx` | Renders responsive navigation, mobile menu behavior, and active-section tracking for all available section IDs. |
+| `src/components/layout/SiteFooter.tsx` | Renders Genesis's name, maintainable current-year copyright, portfolio note, and back-to-top link. |
+| `src/components/sections/HeroSection.tsx` | Renders the verified title, introduction, action, and developer snapshot. |
+| `src/components/sections/AboutSection.tsx` | Renders biography paragraphs and highlights from `portfolio.about`. |
+| `src/components/sections/SkillsSection.tsx` | Renders nested skill groups from `portfolio.skills`. |
+| `src/components/sections/ProjectsSection.tsx` | Renders the compact horizontal project carousel and accessible project dialog from `portfolio.projects`. |
+| `src/components/sections/ExperienceSection.tsx` | Maps `portfolio.experience.items` into semantic work-history cards with dates, location, and responsibilities. |
+| `src/components/sections/EducationSection.tsx` | Maps `portfolio.education.items` into semantic education cards with qualification, institution, and date. |
+| `src/components/sections/ResumeSection.tsx` | Conditionally renders the verified PDF download action from `portfolio.resume.download`. |
+| `src/components/sections/ContactSection.tsx` | Conditionally maps verified `portfolio.contact.methods` into accessible email, phone, and external-profile links. |
+| `src/data/portfolio.ts` | Central editable source for navigation, all section content, experience, education, resume, contact links, and footer copy. |
+| `src/types/portfolio.ts` | Defines all central data shapes, including `ExperienceEntry`, `EducationEntry`, and `ContactMethod`. |
+| `src/styles/global.css` | Contains design tokens, existing section styles, Milestone 4 profile cards, resume panel, contact links, footer, breakpoints, focus, and reduced-motion rules. |
+| `public/assets/resume/genesis-clabisellas-resume.pdf` | Unmodified verified resume served at `/assets/resume/genesis-clabisellas-resume.pdf`. |
+| `docs/guides/MILESTONE_4_GUIDE.md` | Detailed Milestone 4 architecture, customization, testing, troubleshooting, glossary, and exercises. |
 
 ## Application relationships
 
@@ -80,48 +81,53 @@ index.html
         ├── src/components/sections/HeroSection.tsx
         ├── src/components/sections/AboutSection.tsx
         ├── src/components/sections/SkillsSection.tsx
-        └── src/components/sections/ProjectsSection.tsx
-            ├── local ProjectCard and ProjectVisual components
-            ├── native carousel interactions
-            └── local ProjectDialog and ProjectActions components
+        ├── src/components/sections/ProjectsSection.tsx
+        ├── src/components/sections/ExperienceSection.tsx
+        ├── src/components/sections/EducationSection.tsx
+        ├── src/components/sections/ResumeSection.tsx
+        ├── src/components/sections/ContactSection.tsx
+        └── src/components/layout/SiteFooter.tsx
 
 src/types/portfolio.ts
-└── describes content stored in src/data/portfolio.ts
+└── describes all content stored in src/data/portfolio.ts
 
 src/data/portfolio.ts
-├── supplies navigation content to SiteHeader.tsx
-├── supplies hero content to HeroSection.tsx
-├── supplies portfolio.about to AboutSection.tsx
-├── supplies portfolio.skills to SkillsSection.tsx
-└── supplies portfolio.projects to ProjectsSection.tsx
+├── supplies navigation to SiteHeader.tsx
+├── supplies portfolio.experience to ExperienceSection.tsx
+├── supplies portfolio.education to EducationSection.tsx
+├── supplies portfolio.resume to ResumeSection.tsx
+├── supplies portfolio.contact to ContactSection.tsx
+├── supplies portfolio.footer and portfolio.name to SiteFooter.tsx
+└── reuses one verified resumeLink for portfolio.links.resume and portfolio.resume.download
 
-public/assets/projects/
-└── reserved for future verified project screenshots referenced by project.image.src
+public/assets/resume/genesis-clabisellas-resume.pdf
+└── is referenced by resumeLink.href and copied unchanged into the production build
 ```
-
-The `public/assets/projects/` relationship is documented for future screenshots; the folder is not created while no verified image exists.
 
 ## Current rendered page order
 
-1. Skip link, shown only when focused
+1. Skip link
 2. Responsive primary navigation
-3. Hero introduction and developer snapshot
+3. Hero
 4. About Me
 5. Technical Skills
 6. Featured Projects
+7. Experience
+8. Education
+9. Resume
+10. Contact
+11. Footer
 
-Experience, Education, Resume, Contact, and Footer are not rendered in Milestone 3.
+## Milestone 4 content boundaries
 
-## Current content limitations
-
-- No resume is available. Technical Skills therefore lists only Data analysis, which is supported by the verified data-analytics background.
-- The Projects section displays ApplyWiseAI, the collaborative Pawfect Match project, and Student Performance Predictor using high-level information verified from their public repository documentation.
-- ApplyWiseAI remains the primary featured project. All three entries use the same compact responsive carousel-card size, display only their project names, and stay in one row.
-- Project status, repository URL, live-demo URL, screenshot, and outcome fields remain `null` for every displayed project.
-- Detailed ownership and individual-contribution claims are not displayed for collaborative work.
-
-The Projects data model, reusable card, and reusable dialog support those details later without rendering fake content now.
+- Experience contains only the verified Data Analyst (Intern) role at Veritacore Philippines Inc.
+- Education contains only the verified Bachelor of Science in Information Technology entry from Cebu Institute of Technology - University.
+- The resume PDF is unchanged from the verified source.
+- Contact exposes the verified email, GitHub profile, Facebook profile, Philippines phone number, and Singapore phone number.
+- LinkedIn is omitted because no verified URL is available.
+- No home address, contact form, backend, email service, or additional professional claim is rendered.
+- Empty experience, education, resume, or contact data is conditionally omitted instead of producing empty cards or broken links.
 
 ## Planned growth
 
-Milestone 4 is proposed to add the Experience section after Genesis tests and approves Milestone 3. Authoritative role, organization, date, and responsibility information is required before implementation. Later milestones may add Education, Resume, Contact, Footer, verified public assets, and other separately approved work.
+Milestone 5 is proposed only after Genesis tests and approves Milestone 4. It may cover final animations, broader visual polish, and separately approved deployment preparation. Milestone 5 has not started.

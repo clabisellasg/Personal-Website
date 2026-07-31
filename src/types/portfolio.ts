@@ -37,6 +37,34 @@ export type Project = {
   featured: boolean
 }
 
+export type ExperienceEntry = {
+  role: string
+  employer: string
+  location: string | null
+  startDate: string
+  startLabel: string
+  endDate: string
+  endLabel: string
+  responsibilities: string[]
+}
+
+export type EducationEntry = {
+  qualification: string
+  institution: string
+  location: string | null
+  date: string
+  dateLabel: string
+  details: string[]
+}
+
+export type ContactMethod = {
+  title: string
+  value: string
+  description: string
+  link: PortfolioLink
+  external: boolean
+}
+
 export type PortfolioContent = {
   name: string
   shortName: string
@@ -52,7 +80,10 @@ export type PortfolioContent = {
     resume: PortfolioLink | null
     github: PortfolioLink | null
     linkedIn: PortfolioLink | null
+    facebook: PortfolioLink | null
     email: PortfolioLink | null
+    phonePhilippines: PortfolioLink | null
+    phoneSingapore: PortfolioLink | null
   }
   snapshot: Array<{
     label: string
@@ -75,5 +106,34 @@ export type PortfolioContent = {
     heading: string
     introduction: string
     items: Project[]
+  }
+  experience: {
+    label: string
+    heading: string
+    introduction: string
+    items: ExperienceEntry[]
+  }
+  education: {
+    label: string
+    heading: string
+    introduction: string
+    items: EducationEntry[]
+  }
+  resume: {
+    label: string
+    heading: string
+    introduction: string
+    download: PortfolioLink | null
+    downloadFilename: string
+  }
+  contact: {
+    label: string
+    heading: string
+    introduction: string
+    methods: ContactMethod[]
+  }
+  footer: {
+    note: string
+    backToTopLabel: string
   }
 }

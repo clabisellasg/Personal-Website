@@ -1,6 +1,6 @@
 # Portfolio Customization Quick Reference
 
-Use this page for common edits. See the [Milestone 1 Guide](./guides/MILESTONE_1_GUIDE.md) for navigation and hero details, the [Milestone 2 Guide](./guides/MILESTONE_2_GUIDE.md) for About and Skills, and the [Milestone 3 Guide](./guides/MILESTONE_3_GUIDE.md) for Featured Projects.
+Use this page for common edits. See the [Milestone 1 Guide](./guides/MILESTONE_1_GUIDE.md) for navigation and hero details, the [Milestone 2 Guide](./guides/MILESTONE_2_GUIDE.md) for About and Skills, the [Milestone 3 Guide](./guides/MILESTONE_3_GUIDE.md) for Featured Projects, and the [Milestone 4 Guide](./guides/MILESTONE_4_GUIDE.md) for Experience, Education, Resume, Contact, and Footer.
 
 ## Current common edits
 
@@ -27,8 +27,17 @@ Use this page for common edits. See the [Milestone 1 Guide](./guides/MILESTONE_1
 | Change carousel card widths, snapping, scrollbar, or control styles | `src/styles/global.css`, `.projects-carousel__track`, `.project-card`, and `.projects-carousel__controls` |
 | Change carousel wheel, drag, arrow, or keyboard behavior | `src/components/sections/ProjectsSection.tsx`, the track handlers and `scrollByCard` |
 | Change project popup layout or behavior | `src/components/sections/ProjectsSection.tsx`, `ProjectDialog` and its dialog effect; styles are under `.project-dialog*` in `src/styles/global.css` |
-| Reorder or hide About, Skills, or Projects | `src/App.tsx`; keep matching navigation availability synchronized in `src/data/portfolio.ts` |
-| Add verified resume, GitHub, LinkedIn, or email destinations | `src/data/portfolio.ts`, `portfolio.links` |
+| Add, edit, remove, or reorder experience | `src/data/portfolio.ts`, `portfolio.experience.items` |
+| Add, edit, remove, or reorder education | `src/data/portfolio.ts`, `portfolio.education.items` |
+| Replace the resume PDF | Replace `public/assets/resume/genesis-clabisellas-resume.pdf`; keep `resumeLink.href` and `portfolio.resume.downloadFilename` synchronized if the filename changes |
+| Change the Resume section copy | `src/data/portfolio.ts`, `portfolio.resume` |
+| Change email, GitHub, Facebook, or phone numbers | `src/data/portfolio.ts`, the matching link constant, `portfolio.links`, and `portfolio.contact.methods` |
+| Add LinkedIn after verification | Add a verified link in `src/data/portfolio.ts`, assign it to `portfolio.links.linkedIn`, and add one matching `portfolio.contact.methods` entry |
+| Hide an unavailable contact method | Remove its complete object from `portfolio.contact.methods` and set the corresponding `portfolio.links` value to `null` |
+| Change the Contact section message | `src/data/portfolio.ts`, `portfolio.contact.heading` and `portfolio.contact.introduction` |
+| Change footer text or back-to-top label | `src/data/portfolio.ts`, `portfolio.footer`; footer structure is in `src/components/layout/SiteFooter.tsx` |
+| Change profile cards, Resume, Contact, or Footer layout | `src/styles/global.css`, `.profile-*`, `.resume-*`, `.contact-*`, and `.site-footer*` selectors |
+| Reorder or hide page sections | `src/App.tsx`; keep matching navigation availability synchronized in `src/data/portfolio.ts` |
 | Change colors, fonts, spacing, borders, shadows, or content width | `src/styles/global.css`, the custom properties in `:root` |
 | Change hero sizing or layout | `src/styles/global.css`, `.hero`, `.hero__inner`, `.hero__content`, and the media queries |
 | Change the mobile menu's visual behavior | `src/styles/global.css`, `.menu-button`, `.site-nav__mobile`, and the `64rem` breakpoint |
@@ -46,7 +55,7 @@ Each item in `portfolio.navigation` has:
 
 Do not give a planned item a fake `#section` destination. When a later section is added, create its matching `id`, change the navigation item's `href`, and set its availability to `available`.
 
-About, Skills, and Projects are currently available at `#about`, `#skills`, and `#projects`.
+About, Skills, Projects, Experience, Education, Resume, and Contact are currently available at `#about`, `#skills`, `#projects`, `#experience`, `#education`, `#resume`, and `#contact`.
 
 Available fragment links also participate in the active-section indicator. Keep their order aligned with the rendered section order so the cyan underline and `aria-current="location"` identify the section currently below the sticky header.
 
@@ -56,7 +65,7 @@ Available fragment links also participate in the active-section indicator. Keep 
 - Each skill category requires a `title` and a non-empty `skills` array.
 - Reorder complete array entries to change display order.
 - Remove an entire category instead of leaving `skills: []`.
-- The resume is still unavailable, so do not add technical skills beyond verified sources.
+- Keep Technical Skills changes separately reviewed even when another resume version lists additional technologies.
 
 See [MILESTONE_2_GUIDE.md](./guides/MILESTONE_2_GUIDE.md) for exact add, remove, reorder, hide, restore, style, and testing instructions.
 
@@ -77,18 +86,23 @@ See [MILESTONE_2_GUIDE.md](./guides/MILESTONE_2_GUIDE.md) for exact add, remove,
 
 See [MILESTONE_3_GUIDE.md](./guides/MILESTONE_3_GUIDE.md) for exact project fields, add/remove/reorder steps, screenshot guidance, link handling, layout changes, and testing instructions.
 
-## External links and resume
+## Experience, Education, Resume, Contact, and Footer
 
-`portfolio.links.resume`, `github`, `linkedIn`, and `email` are currently `null` because publishing those actions is outside the approved milestone. Add only confirmed destinations after explicit approval:
+- Experience and education render from ordered arrays in `portfolio.experience.items` and `portfolio.education.items`.
+- Move complete objects to reorder them; delete complete objects to remove them.
+- `ExperienceSection` and `EducationSection` return `null` when their arrays are empty.
+- The verified resume lives at `public/assets/resume/genesis-clabisellas-resume.pdf`.
+- `resumeLink` supplies the same public path to `portfolio.links.resume` and `portfolio.resume.download`.
+- Email uses `mailto:`, phone numbers use `tel:`, and GitHub and Facebook use complete `https://` URLs.
+- GitHub and Facebook open with `target="_blank"` and `rel="noopener noreferrer"`; email and phone links stay in the current browsing context.
+- LinkedIn remains `null` and is not rendered.
+- `SiteFooter` calculates the current year with `new Date().getFullYear()`.
 
-- Use a complete `https://` URL for profiles.
-- Use a `mailto:` link for email.
-- Put a supplied resume in `public/assets/resume/` and use its public path, such as `/assets/resume/Genesis-Clabisellas-Resume.pdf`.
-- Add a visible button only after the destination exists.
+See [MILESTONE_4_GUIDE.md](./guides/MILESTONE_4_GUIDE.md) for exact fields, safe asset replacement, section hiding/restoration, layout changes, and verification steps.
 
 ## Content safety
 
 - Do not replace `null` with an invented link.
-- Do not add education, work history, additional skills, project outcomes, statistics, or qualifications without an authoritative source.
+- Do not add education, work history, additional skills, project outcomes, statistics, qualifications, or contact methods without an authoritative source.
 - Keep the title and introduction aligned with `docs/PROJECT_CONTEXT.md`.
 - After any edit, run `npm run lint`, `npm run typecheck`, and `npm run build`.

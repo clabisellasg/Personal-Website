@@ -1,5 +1,35 @@
 import type { PortfolioContent } from '../types/portfolio'
 
+const resumeLink = {
+  label: 'Download Resume',
+  href: '/assets/resume/genesis-clabisellas-resume.pdf',
+}
+
+const githubLink = {
+  label: 'View Genesis Clabisellas on GitHub',
+  href: 'https://github.com/clabisellasg',
+}
+
+const emailLink = {
+  label: 'Email Genesis Clabisellas',
+  href: 'mailto:clabisellasg@gmail.com',
+}
+
+const facebookLink = {
+  label: 'View Genesis Clabisellas on Facebook',
+  href: 'https://www.facebook.com/GenesisMeOfficial/',
+}
+
+const phonePhilippinesLink = {
+  label: 'Call Genesis Clabisellas at +63 943 500 9727',
+  href: 'tel:+639435009727',
+}
+
+const phoneSingaporeLink = {
+  label: 'Call Genesis Clabisellas at +65 8401 1431',
+  href: 'tel:+6584011431',
+}
+
 export const portfolio: PortfolioContent = {
   name: 'Genesis Clabisellas',
   shortName: 'GC',
@@ -12,9 +42,10 @@ export const portfolio: PortfolioContent = {
     { label: 'About', href: '#about', availability: 'available' },
     { label: 'Skills', href: '#skills', availability: 'available' },
     { label: 'Projects', href: '#projects', availability: 'available' },
-    { label: 'Experience', href: null, availability: 'planned' },
-    { label: 'Education', href: null, availability: 'planned' },
-    { label: 'Contact', href: null, availability: 'planned' },
+    { label: 'Experience', href: '#experience', availability: 'available' },
+    { label: 'Education', href: '#education', availability: 'available' },
+    { label: 'Resume', href: '#resume', availability: 'available' },
+    { label: 'Contact', href: '#contact', availability: 'available' },
   ],
   hero: {
     eyebrow: 'Software development · Data analytics',
@@ -25,11 +56,13 @@ export const portfolio: PortfolioContent = {
     secondaryAction: null,
   },
   links: {
-    // Add verified URLs here when the matching profile or file is available.
-    resume: null,
-    github: null,
+    resume: resumeLink,
+    github: githubLink,
     linkedIn: null,
-    email: null,
+    facebook: facebookLink,
+    email: emailLink,
+    phonePhilippines: phonePhilippinesLink,
+    phoneSingapore: phoneSingaporeLink,
   },
   snapshot: [
     { label: 'Current focus', value: 'Junior software development' },
@@ -154,5 +187,98 @@ export const portfolio: PortfolioContent = {
         featured: false,
       },
     ],
+  },
+  experience: {
+    label: '04 / Experience',
+    heading: 'Turning data into practical business insight',
+    introduction:
+      'Professional experience applying data analysis, reporting, and collaboration to real business information.',
+    items: [
+      {
+        role: 'Data Analyst (Intern)',
+        employer: 'Veritacore Philippines Inc.',
+        location: 'Cebu, Philippines',
+        startDate: '2026-01',
+        startLabel: 'January 2026',
+        endDate: '2026-04',
+        endLabel: 'April 2026',
+        responsibilities: [
+          'Built interactive Metabase dashboards for monthly company data and key business metrics.',
+          'Queried and analyzed data with MySQL to identify business trends, patterns, and performance insights.',
+          'Collaborated with team members to translate raw data into actionable insights about performance and operational opportunities.',
+        ],
+      },
+    ],
+  },
+  education: {
+    label: '05 / Education',
+    heading: 'An information technology foundation',
+    introduction:
+      'Formal study supporting continued growth across software development and data analysis.',
+    items: [
+      {
+        qualification: 'Bachelor of Science in Information Technology',
+        institution: 'Cebu Institute of Technology - University',
+        location: null,
+        date: '2026-05',
+        dateLabel: 'Expected May 2026',
+        details: [],
+      },
+    ],
+  },
+  resume: {
+    label: '06 / Resume',
+    heading: 'Review the complete resume',
+    introduction:
+      'Download the verified resume for a concise overview of experience, education, projects, skills, and certifications.',
+    download: resumeLink,
+    downloadFilename: 'genesis-clabisellas-resume.pdf',
+  },
+  contact: {
+    label: '07 / Contact',
+    heading: 'Let us start a conversation',
+    introduction:
+      'For junior software-development opportunities or relevant professional conversations, reach out by email or phone, or connect through GitHub and Facebook.',
+    methods: [
+      {
+        title: 'Email',
+        value: 'clabisellasg@gmail.com',
+        description: 'Send a direct message',
+        link: emailLink,
+        external: false,
+      },
+      {
+        title: 'GitHub',
+        value: 'github.com/clabisellasg',
+        description: 'Explore the public profile',
+        link: githubLink,
+        external: true,
+      },
+      {
+        title: 'Facebook',
+        value: 'facebook.com/GenesisMeOfficial',
+        description: 'Connect on Facebook',
+        link: facebookLink,
+        external: true,
+      },
+      {
+        title: 'Phone - Philippines',
+        value: '+63 943 500 9727',
+        description: 'Call the Philippines number',
+        link: phonePhilippinesLink,
+        external: false,
+      },
+      {
+        title: 'Phone - Singapore',
+        value: '+65 8401 1431',
+        description: 'Call the Singapore number',
+        link: phoneSingaporeLink,
+        external: false,
+      },
+    ],
+  },
+  footer: {
+    note: 'Junior software development and data analytics.',
+    backToTopLabel: 'Back to top',
   },
 }

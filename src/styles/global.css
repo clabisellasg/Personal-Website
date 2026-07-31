@@ -1147,6 +1147,248 @@ h1 {
   margin-top: var(--space-6);
 }
 
+.profile-section,
+.resume-section,
+.contact-section {
+  min-height: auto;
+}
+
+.experience-section {
+  background: rgba(4, 16, 26, 0.46);
+}
+
+.education-section {
+  background: rgba(10, 33, 48, 0.24);
+}
+
+.profile-list {
+  display: grid;
+  max-width: 68rem;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.profile-entry {
+  display: grid;
+  gap: var(--space-6);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(145deg, rgba(14, 41, 58, 0.84), rgba(6, 24, 36, 0.78)),
+    var(--color-surface);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.12);
+}
+
+.profile-entry--education {
+  border-color: var(--color-border-strong);
+  background:
+    linear-gradient(145deg, rgba(88, 216, 232, 0.07), transparent 52%),
+    rgba(6, 24, 36, 0.82);
+}
+
+.profile-entry__meta {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.profile-entry__index {
+  color: var(--color-accent-strong);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+}
+
+.profile-entry__dates {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.profile-entry__location {
+  color: var(--color-text-subtle);
+  font-size: var(--text-sm);
+}
+
+.profile-entry__content {
+  min-width: 0;
+}
+
+.profile-entry__content h3 {
+  overflow-wrap: anywhere;
+  font-size: clamp(1.45rem, 3vw, 2.1rem);
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+}
+
+.profile-entry__organization {
+  margin-top: var(--space-2);
+  overflow-wrap: anywhere;
+  color: var(--color-accent-strong);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.profile-entry__details {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  color: var(--color-text-muted);
+}
+
+.profile-entry__details li {
+  position: relative;
+  padding-left: var(--space-5);
+  overflow-wrap: anywhere;
+  line-height: 1.72;
+}
+
+.profile-entry__details li::before {
+  position: absolute;
+  top: 0.7em;
+  left: 0;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  content: '';
+}
+
+.resume-section {
+  padding-block: clamp(4rem, 8vw, 6rem);
+  background: rgba(4, 16, 26, 0.58);
+}
+
+.resume-panel {
+  display: grid;
+  gap: var(--space-6);
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(120deg, rgba(88, 216, 232, 0.1), transparent 48%),
+    var(--color-surface);
+  box-shadow: var(--shadow-soft), var(--shadow-glow);
+}
+
+.resume-panel__title {
+  max-width: 15ch;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+}
+
+.resume-panel__introduction {
+  max-width: 44rem;
+  margin-top: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+}
+
+.resume-panel__action {
+  justify-self: start;
+  white-space: nowrap;
+}
+
+.contact-section {
+  background: rgba(10, 33, 48, 0.32);
+}
+
+.contact-section__introduction {
+  max-width: 40rem;
+  margin-top: var(--space-5);
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+}
+
+.contact-methods {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.contact-method {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: rgba(6, 20, 31, 0.72);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.contact-method:hover,
+.contact-method:focus-visible {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface);
+  transform: translateY(-0.125rem);
+}
+
+.contact-method__type {
+  color: var(--color-accent-strong);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contact-method strong {
+  overflow-wrap: anywhere;
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+  letter-spacing: -0.025em;
+}
+
+.contact-method__description {
+  color: var(--color-text-subtle);
+  font-size: var(--text-sm);
+}
+
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-background-deep);
+}
+
+.site-footer__inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding-block: var(--space-6);
+}
+
+.site-footer__name {
+  font-weight: 700;
+}
+
+.site-footer__note,
+.site-footer__closing {
+  color: var(--color-text-subtle);
+  font-size: var(--text-sm);
+}
+
+.site-footer__closing {
+  display: grid;
+  justify-items: end;
+  gap: var(--space-2);
+  text-align: right;
+}
+
+.site-footer__closing a {
+  color: var(--color-accent-strong);
+  font-weight: 600;
+}
+
+.site-footer__closing a:hover {
+  color: var(--color-text);
+}
+
 @keyframes project-dialog-enter {
   from {
     opacity: 0;
@@ -1192,6 +1434,23 @@ h1 {
 
   .about-highlight__index {
     grid-row: auto;
+  }
+
+  .profile-entry {
+    grid-template-columns: minmax(11rem, 0.38fr) minmax(0, 1fr);
+  }
+
+  .resume-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .contact-methods {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-methods > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 
   .project-card {
@@ -1250,6 +1509,17 @@ h1 {
     gap: clamp(3rem, 7vw, 7rem);
   }
 
+  .contact-section__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(28rem, 1.2fr);
+    align-items: start;
+    gap: clamp(3rem, 7vw, 7rem);
+  }
+
+  .contact-section__layout .section-header {
+    margin-bottom: 0;
+  }
+
   .projects-carousel__controls {
     display: flex;
   }
@@ -1294,8 +1564,20 @@ h1 {
 
   .about-highlight,
   .skill-group,
+  .profile-entry,
+  .contact-method,
   .project-dialog__content {
     padding: var(--space-4);
+  }
+
+  .site-footer__inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .site-footer__closing {
+    justify-items: start;
+    text-align: left;
   }
 
   .project-visual__placeholder {
