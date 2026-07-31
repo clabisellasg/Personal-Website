@@ -1,6 +1,7 @@
 import { SiteHeader } from './components/layout/SiteHeader'
 import { AboutSection } from './components/sections/AboutSection'
 import { HeroSection } from './components/sections/HeroSection'
+import { ProjectsSection } from './components/sections/ProjectsSection'
 import { SkillsSection } from './components/sections/SkillsSection'
 
 function App() {
@@ -12,10 +13,11 @@ function App() {
       <SiteHeader />
       <main id="main-content" tabIndex={-1}>
         <div id="home">
-          <HeroSection />
+        <HeroSection />
         </div>
         <AboutSection />
         <SkillsSection />
+        <ProjectsSection />
       </main>
     </>
   )

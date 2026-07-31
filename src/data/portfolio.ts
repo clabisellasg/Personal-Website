@@ -11,7 +11,7 @@ export const portfolio: PortfolioContent = {
     { label: 'Home', href: '#home', availability: 'available' },
     { label: 'About', href: '#about', availability: 'available' },
     { label: 'Skills', href: '#skills', availability: 'available' },
-    { label: 'Projects', href: null, availability: 'planned' },
+    { label: 'Projects', href: '#projects', availability: 'available' },
     { label: 'Experience', href: null, availability: 'planned' },
     { label: 'Education', href: null, availability: 'planned' },
     { label: 'Contact', href: null, availability: 'planned' },
@@ -73,6 +73,86 @@ export const portfolio: PortfolioContent = {
       },
       // Add further categories only after the missing resume or another
       // authoritative source verifies the individual skills.
+    ],
+  },
+  projects: {
+    label: '03 / Featured projects',
+    heading: 'Software built around practical problems',
+    introduction:
+      'A focused selection of full-stack and machine-learning projects shaped around practical user needs.',
+    items: [
+      {
+        title: 'ApplyWiseAI',
+        summary:
+          'An AI-powered assistant for organizing and strengthening the job-application workflow.',
+        description:
+          'A full-stack application for saving jobs and resumes, comparing them, tracking applications, and drafting resume-grounded application materials.',
+        technologies: [
+          'React',
+          'TypeScript',
+          'Java',
+          'Spring Boot',
+          'PostgreSQL',
+        ],
+        features: [
+          'Job and resume management',
+          'Job-to-resume analysis',
+          'Application tracking and tailored materials',
+        ],
+        status: null,
+        repository: null,
+        liveDemo: null,
+        image: null,
+        featured: true,
+      },
+      {
+        title: 'Pawfect Match',
+        summary:
+          'A collaborative platform that helps pet owners find suitable matches for dogs and cats.',
+        description:
+          'A full-stack matchmaking project centered on pet profiles, search, communication, and appointment coordination.',
+        technologies: [
+          'React',
+          'Java',
+          'Spring Boot',
+          'MongoDB',
+          'Firebase',
+        ],
+        features: [
+          'Pet profile management',
+          'Search and matchmaking',
+          'Messaging and scheduling',
+        ],
+        status: null,
+        repository: null,
+        liveDemo: null,
+        image: null,
+        featured: false,
+      },
+      {
+        title: 'Student Performance Predictor',
+        summary:
+          'A machine-learning project for predicting student academic performance from multiple data factors.',
+        description:
+          'An end-to-end analysis pipeline that prepares student data, trains classification and regression models, evaluates results, and produces visualizations.',
+        technologies: [
+          'Python',
+          'pandas',
+          'scikit-learn',
+          'Matplotlib',
+          'Seaborn',
+        ],
+        features: [
+          'Student data preprocessing',
+          'Grade classification and score regression',
+          'Model evaluation and feature analysis',
+        ],
+        status: null,
+        repository: null,
+        liveDemo: null,
+        image: null,
+        featured: false,
+      },
     ],
   },
 }

@@ -1,6 +1,6 @@
 # Portfolio Customization Quick Reference
 
-Use this page for common edits. See the [Milestone 1 Guide](./guides/MILESTONE_1_GUIDE.md) for navigation and hero details, and the [Milestone 2 Guide](./guides/MILESTONE_2_GUIDE.md) for complete About and Skills instructions.
+Use this page for common edits. See the [Milestone 1 Guide](./guides/MILESTONE_1_GUIDE.md) for navigation and hero details, the [Milestone 2 Guide](./guides/MILESTONE_2_GUIDE.md) for About and Skills, and the [Milestone 3 Guide](./guides/MILESTONE_3_GUIDE.md) for Featured Projects.
 
 ## Current common edits
 
@@ -18,7 +18,16 @@ Use this page for common edits. See the [Milestone 1 Guide](./guides/MILESTONE_1
 | Change the Skills label, heading, or introduction | `src/data/portfolio.ts`, `portfolio.skills.label`, `heading`, and `introduction` |
 | Add, edit, remove, or reorder skill categories | `src/data/portfolio.ts`, `portfolio.skills.groups` |
 | Add, edit, remove, or reorder individual skills | `src/data/portfolio.ts`, the relevant category's `skills` array |
-| Reorder or hide About and Skills | `src/App.tsx`; keep matching navigation availability synchronized in `src/data/portfolio.ts` |
+| Change Projects section headings or introduction | `src/data/portfolio.ts`, `portfolio.projects.label`, `heading`, and `introduction` |
+| Add, edit, remove, or reorder projects | `src/data/portfolio.ts`, `portfolio.projects.items` |
+| Change a project's technologies or features | `src/data/portfolio.ts`, the project's `technologies` and `features` arrays |
+| Mark a project as featured | `src/data/portfolio.ts`, the project's `featured` boolean |
+| Add or hide repository and demo actions | `src/data/portfolio.ts`, the project's `repository` and `liveDemo`; use `null` when unavailable |
+| Add or replace a project screenshot | Store the verified file under `public/assets/projects/`, then update the project's `image.src` and accurate `image.alt` |
+| Change carousel card widths, snapping, scrollbar, or control styles | `src/styles/global.css`, `.projects-carousel__track`, `.project-card`, and `.projects-carousel__controls` |
+| Change carousel wheel, drag, arrow, or keyboard behavior | `src/components/sections/ProjectsSection.tsx`, the track handlers and `scrollByCard` |
+| Change project popup layout or behavior | `src/components/sections/ProjectsSection.tsx`, `ProjectDialog` and its dialog effect; styles are under `.project-dialog*` in `src/styles/global.css` |
+| Reorder or hide About, Skills, or Projects | `src/App.tsx`; keep matching navigation availability synchronized in `src/data/portfolio.ts` |
 | Add verified resume, GitHub, LinkedIn, or email destinations | `src/data/portfolio.ts`, `portfolio.links` |
 | Change colors, fonts, spacing, borders, shadows, or content width | `src/styles/global.css`, the custom properties in `:root` |
 | Change hero sizing or layout | `src/styles/global.css`, `.hero`, `.hero__inner`, `.hero__content`, and the media queries |
@@ -37,7 +46,7 @@ Each item in `portfolio.navigation` has:
 
 Do not give a planned item a fake `#section` destination. When a later section is added, create its matching `id`, change the navigation item's `href`, and set its availability to `available`.
 
-About and Skills are currently available at `#about` and `#skills`.
+About, Skills, and Projects are currently available at `#about`, `#skills`, and `#projects`.
 
 Available fragment links also participate in the active-section indicator. Keep their order aligned with the rendered section order so the cyan underline and `aria-current="location"` identify the section currently below the sticky header.
 
@@ -51,9 +60,26 @@ Available fragment links also participate in the active-section indicator. Keep 
 
 See [MILESTONE_2_GUIDE.md](./guides/MILESTONE_2_GUIDE.md) for exact add, remove, reorder, hide, restore, style, and testing instructions.
 
+## Featured Projects
+
+- Project cards render automatically from `portfolio.projects.items`.
+- Cards are intentionally compact and display only each project's `title`; summaries, descriptions, technologies, features, images, and links belong in the dialog.
+- Each card is the direct `.project-card__button` click target. Do not replace it with an invisible overlay or let track dragging capture card pointer events.
+- Cards stay in one horizontal, non-wrapping row and use touch, wheel, drag, keyboard, and desktop arrow navigation.
+- Activating a card opens a native dialog generated from the same project object; content is not duplicated.
+- The dialog locks background scrolling, closes by button, Escape, or backdrop click, and returns focus to its card.
+- The current selection contains ApplyWiseAI, Pawfect Match, and Student Performance Predictor.
+- Descriptions, technologies, and features stay at the high level supported by public repository documentation.
+- Empty `technologies` and `features` arrays hide their complete groups.
+- `null` status, repository, demo, and image values do not create broken public elements.
+- `featured: true` gives a project the full-width featured layout.
+- Add only verified project claims, URLs, and screenshots. Repository and demo actions are intentionally `null` in the current milestone.
+
+See [MILESTONE_3_GUIDE.md](./guides/MILESTONE_3_GUIDE.md) for exact project fields, add/remove/reorder steps, screenshot guidance, link handling, layout changes, and testing instructions.
+
 ## External links and resume
 
-`portfolio.links.resume`, `github`, `linkedIn`, and `email` are currently `null` because no verified destinations are available. Add only confirmed destinations:
+`portfolio.links.resume`, `github`, `linkedIn`, and `email` are currently `null` because publishing those actions is outside the approved milestone. Add only confirmed destinations after explicit approval:
 
 - Use a complete `https://` URL for profiles.
 - Use a `mailto:` link for email.

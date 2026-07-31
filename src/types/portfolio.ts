@@ -19,6 +19,24 @@ export type SkillGroup = {
   skills: string[]
 }
 
+export type ProjectImage = {
+  src: string
+  alt: string
+}
+
+export type Project = {
+  title: string
+  summary: string
+  description: string
+  technologies: string[]
+  features: string[]
+  status: string | null
+  repository: PortfolioLink | null
+  liveDemo: PortfolioLink | null
+  image: ProjectImage | null
+  featured: boolean
+}
+
 export type PortfolioContent = {
   name: string
   shortName: string
@@ -51,5 +69,11 @@ export type PortfolioContent = {
     heading: string
     introduction: string
     groups: SkillGroup[]
+  }
+  projects: {
+    label: string
+    heading: string
+    introduction: string
+    items: Project[]
   }
 }
