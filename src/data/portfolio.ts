@@ -96,9 +96,9 @@ export const portfolio: PortfolioContent = {
   },
   skills: {
     label: '02 / Technical skills',
-    heading: 'A practical full-stack and data toolkit',
+    heading: 'A practical full-stack, data, and AI toolkit',
     introduction:
-      'Technologies demonstrated across NASAM, ApplyWiseAI, collaborative projects, machine-learning work, and my data-analyst internship.',
+      'Technologies and AI-assisted workflows demonstrated across NASAM, ApplyWiseAI, collaborative projects, machine-learning work, and my data-analyst internship.',
     groups: [
       {
         title: 'Front-end development',
@@ -139,6 +139,15 @@ export const portfolio: PortfolioContent = {
           'MongoDB',
           'Metabase',
           'Dashboard reporting',
+        ],
+      },
+      {
+        title: 'AI-assisted development',
+        skills: [
+          'OpenAI Codex',
+          'ChatGPT',
+          'AI-assisted coding',
+          'AI-assisted debugging',
         ],
       },
       {
