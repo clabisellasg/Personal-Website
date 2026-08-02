@@ -60,11 +60,13 @@ export function HeroSection() {
             </span>
           </div>
           <div className="developer-card__body">
-            <p className="developer-card__monogram" aria-hidden="true">
-              {portfolio.shortName}
-            </p>
+            <img
+              className="developer-card__portrait"
+              src="/assets/images/genesis-clabisellas-graduation.jpg"
+              alt="Genesis Clabisellas in graduation attire"
+            />
             <div>
-              <p className="developer-card__overline">Profile / overview</p>
+              <p className="developer-card__overline">Graduate / developer</p>
               <h2 id="snapshot-title">{portfolio.name}</h2>
             </div>
           </div>
@@ -77,8 +79,8 @@ export function HeroSection() {
             ))}
           </dl>
           <p className="developer-card__caption">
-            A concise portfolio introduction. More verified detail will be added
-            section by section.
+            Information Technology graduate building practical, collaborative
+            software.
           </p>
         </aside>
       </div>

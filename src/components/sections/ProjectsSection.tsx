@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type KeyboardEvent,
@@ -15,6 +16,8 @@ import type { Project } from '../../types/portfolio'
 type ProjectCardProps = {
   project: Project
   index: number
+  copyIndex: number
+  isClone: boolean
   onOpen: (
     project: Project,
     index: number,
@@ -100,7 +103,13 @@ function ProjectActions({ project }: { project: Project }) {
   )
 }
 
-function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
+function ProjectCard({
+  project,
+  index,
+  copyIndex,
+  isClone,
+  onOpen,
+}: ProjectCardProps) {
   const openProject = (trigger: HTMLButtonElement) => {
     onOpen(project, index, trigger)
   }
@@ -108,10 +117,14 @@ function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
   return (
     <li
       className={`project-card${project.featured ? ' project-card--featured' : ''}`}
+      aria-hidden={isClone || undefined}
     >
       <button
         className="project-card__button"
         type="button"
+        data-loop-copy={copyIndex}
+        data-project-index={index}
+        tabIndex={isClone ? -1 : undefined}
         aria-haspopup="dialog"
         aria-label={`Open ${project.title} project details`}
         onClick={(event) => openProject(event.currentTarget)}
@@ -123,7 +136,17 @@ function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
         }}
       >
         <span className="project-card__grid" aria-hidden="true" />
+        <span className="project-card__eyebrow">
+          {project.featured
+            ? 'Featured capstone'
+            : project.status ?? 'Selected project'}
+        </span>
         <span className="project-card__title">{project.title}</span>
+        <span className="project-card__summary">{project.summary}</span>
+        <span className="project-card__footer">
+          Open project
+          <span aria-hidden="true">↗</span>
+        </span>
       </button>
     </li>
   )
@@ -226,52 +249,123 @@ function ProjectDialog({
 
 export function ProjectsSection() {
   const { projects } = portfolio
+  const hasLoopingContent = projects.items.length > 1
+  const carouselProjects = hasLoopingContent
+    ? [0, 1, 2].flatMap((copyIndex) =>
+        projects.items.map((project, index) => ({
+          project,
+          index,
+          copyIndex,
+          isClone: copyIndex !== 1,
+        })),
+      )
+    : projects.items.map((project, index) => ({
+        project,
+        index,
+        copyIndex: 0,
+        isClone: false,
+      }))
   const trackRef = useRef<HTMLUListElement>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null)
   const dragRef = useRef({
     pointerId: -1,
-    startX: 0,
-    startScrollLeft: 0,
+    lastX: 0,
+    distance: 0,
   })
+  const suppressClickRef = useRef(false)
   const [selectedProject, setSelectedProject] = useState<{
     project: Project
     index: number
   } | null>(null)
-  const [canScrollPrevious, setCanScrollPrevious] = useState(false)
-  const [canScrollNext, setCanScrollNext] = useState(true)
-  const [hasScrollableContent, setHasScrollableContent] = useState<
-    boolean | null
-  >(null)
   const [isDragging, setIsDragging] = useState(false)
 
-  const updateScrollControls = useCallback(() => {
+  const getLoopMetrics = useCallback((track: HTMLUListElement) => {
+    const cards = track.querySelectorAll<HTMLElement>('.project-card')
+    const projectCount = projects.items.length
+
+    if (projectCount <= 1 || cards.length < projectCount * 3) {
+      return null
+    }
+
+    const trackLeft = track.getBoundingClientRect().left
+    const start =
+      cards[projectCount].getBoundingClientRect().left -
+      trackLeft +
+      track.scrollLeft
+    const end =
+      cards[projectCount * 2].getBoundingClientRect().left -
+      trackLeft +
+      track.scrollLeft
+
+    return { start, end, width: end - start }
+  }, [projects.items.length])
+
+  const jumpWithoutAnimation = useCallback(
+    (track: HTMLUListElement, left: number) => {
+      const previousBehavior = track.style.scrollBehavior
+      track.style.scrollBehavior = 'auto'
+      track.scrollLeft = left
+      track.style.scrollBehavior = previousBehavior
+    },
+    [],
+  )
+
+  const centerLoop = useCallback(() => {
     const track = trackRef.current
 
     if (!track) {
+      return
+    }
+
+    const metrics = getLoopMetrics(track)
+
+    if (metrics) {
+      jumpWithoutAnimation(track, metrics.start)
+    }
+  }, [getLoopMetrics, jumpWithoutAnimation])
+
+  const maintainLoopPosition = useCallback(() => {
+    const track = trackRef.current
+
+    if (!track) {
+      return
+    }
+
+    const metrics = getLoopMetrics(track)
+
+    if (!metrics || metrics.width <= 0) {
       return
     }
 
     const maximumScroll = track.scrollWidth - track.clientWidth
-    setHasScrollableContent(maximumScroll > 2)
-    setCanScrollPrevious(track.scrollLeft > 2)
-    setCanScrollNext(track.scrollLeft < maximumScroll - 2)
-  }, [])
+    const lowerBoundary = Math.max(0, metrics.start - metrics.width)
+    const upperBoundary = Math.min(
+      maximumScroll,
+      metrics.end + metrics.width - track.clientWidth,
+    )
 
-  useEffect(() => {
+    if (track.scrollLeft <= lowerBoundary + 1) {
+      jumpWithoutAnimation(track, track.scrollLeft + metrics.width)
+    } else if (track.scrollLeft >= upperBoundary - 1) {
+      jumpWithoutAnimation(track, track.scrollLeft - metrics.width)
+    }
+  }, [getLoopMetrics, jumpWithoutAnimation])
+
+  useLayoutEffect(() => {
     const track = trackRef.current
 
     if (!track) {
       return
     }
 
-    updateScrollControls()
-    const resizeObserver = new ResizeObserver(updateScrollControls)
+    centerLoop()
+    const resizeObserver = new ResizeObserver(centerLoop)
     resizeObserver.observe(track)
 
     return () => resizeObserver.disconnect()
-  }, [updateScrollControls])
+  }, [centerLoop])
 
   useEffect(() => {
     if (!selectedProject) {
@@ -361,23 +455,12 @@ export function ProjectsSection() {
       return
     }
 
-    const maximumScroll = track.scrollWidth - track.clientWidth
-    const canMove =
-      (event.deltaY < 0 && track.scrollLeft > 0) ||
-      (event.deltaY > 0 && track.scrollLeft < maximumScroll)
-
-    if (canMove) {
-      event.preventDefault()
-      track.scrollLeft += event.deltaY
-    }
+    event.preventDefault()
+    track.scrollLeft += event.deltaY
   }
 
   const handlePointerDown = (event: PointerEvent<HTMLUListElement>) => {
-    if (
-      event.pointerType !== 'mouse' ||
-      event.button !== 0 ||
-      event.target !== event.currentTarget
-    ) {
+    if (event.pointerType !== 'mouse' || event.button !== 0) {
       return
     }
 
@@ -389,11 +472,10 @@ export function ProjectsSection() {
 
     dragRef.current = {
       pointerId: event.pointerId,
-      startX: event.clientX,
-      startScrollLeft: track.scrollLeft,
+      lastX: event.clientX,
+      distance: 0,
     }
-    track.setPointerCapture(event.pointerId)
-    setIsDragging(true)
+    suppressClickRef.current = false
   }
 
   const handlePointerMove = (event: PointerEvent<HTMLUListElement>) => {
@@ -404,33 +486,69 @@ export function ProjectsSection() {
       return
     }
 
-    const distance = event.clientX - drag.startX
+    const distance = event.clientX - drag.lastX
+    drag.lastX = event.clientX
+    drag.distance += Math.abs(distance)
 
-    track.scrollLeft = drag.startScrollLeft - distance
+    if (drag.distance > 4) {
+      suppressClickRef.current = true
+      setIsDragging(true)
+
+      if (!track.hasPointerCapture(event.pointerId)) {
+        track.setPointerCapture(event.pointerId)
+      }
+    }
+
+    track.scrollLeft -= distance
   }
 
-  const finishPointerDrag = (event: PointerEvent<HTMLUListElement>) => {
+  const finishPointerDrag = useCallback((pointerId: number) => {
     const track = trackRef.current
     const drag = dragRef.current
 
-    if (!track || drag.pointerId !== event.pointerId) {
+    if (!track || drag.pointerId !== pointerId) {
       return
     }
 
-    if (track.hasPointerCapture(event.pointerId)) {
-      track.releasePointerCapture(event.pointerId)
+    if (track.hasPointerCapture(pointerId)) {
+      track.releasePointerCapture(pointerId)
     }
 
     drag.pointerId = -1
     setIsDragging(false)
-  }
+    window.setTimeout(() => {
+      suppressClickRef.current = false
+    }, 0)
+  }, [])
+
+  useEffect(() => {
+    const handleWindowPointerEnd = (event: globalThis.PointerEvent) => {
+      finishPointerDrag(event.pointerId)
+    }
+
+    window.addEventListener('pointerup', handleWindowPointerEnd)
+    window.addEventListener('pointercancel', handleWindowPointerEnd)
+
+    return () => {
+      window.removeEventListener('pointerup', handleWindowPointerEnd)
+      window.removeEventListener('pointercancel', handleWindowPointerEnd)
+    }
+  }, [finishPointerDrag])
 
   const openProject = (
     project: Project,
     index: number,
     trigger: HTMLButtonElement,
   ) => {
-    lastTriggerRef.current = trigger
+    if (suppressClickRef.current) {
+      return
+    }
+
+    const centralTrigger = trackRef.current?.querySelector<HTMLButtonElement>(
+      `.project-card__button[data-project-index="${index}"][data-loop-copy="1"]`,
+    )
+
+    lastTriggerRef.current = centralTrigger ?? trigger
     setSelectedProject({ project, index })
   }
 
@@ -463,14 +581,14 @@ export function ProjectsSection() {
               className="projects-carousel__instructions"
               id="projects-carousel-instructions"
             >
-              Select a project to view its details. Swipe or scroll to browse.
+              Select a project to view its details. Drag, swipe, scroll, or use
+              the arrows to browse continuously.
             </p>
-            {hasScrollableContent && (
+            {hasLoopingContent && (
               <div className="projects-carousel__controls">
                 <button
                   type="button"
                   aria-label="Show previous project"
-                  disabled={!canScrollPrevious}
                   onClick={() => scrollByCard(-1)}
                 >
                   <span aria-hidden="true">←</span>
@@ -478,7 +596,6 @@ export function ProjectsSection() {
                 <button
                   type="button"
                   aria-label="Show next project"
-                  disabled={!canScrollNext}
                   onClick={() => scrollByCard(1)}
                 >
                   <span aria-hidden="true">→</span>
@@ -488,26 +605,33 @@ export function ProjectsSection() {
           </div>
 
           <ul
-            className={`projects-carousel__track${hasScrollableContent === false ? ' is-centered' : ''}${isDragging ? ' is-dragging' : ''}`}
+            className={`projects-carousel__track${!hasLoopingContent ? ' is-centered' : ''}${isDragging ? ' is-dragging' : ''}`}
             ref={trackRef}
             tabIndex={0}
             aria-label="Project cards"
-            onScroll={updateScrollControls}
+            onScroll={maintainLoopPosition}
             onKeyDown={handleTrackKeyDown}
             onWheel={handleTrackWheel}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
-            onPointerUp={finishPointerDrag}
-            onPointerCancel={finishPointerDrag}
+            onPointerUp={(event) => finishPointerDrag(event.pointerId)}
+            onPointerCancel={(event) => finishPointerDrag(event.pointerId)}
+            onLostPointerCapture={(event) =>
+              finishPointerDrag(event.pointerId)
+            }
           >
-            {projects.items.map((project, index) => (
+            {carouselProjects.map(
+              ({ project, index, copyIndex, isClone }) => (
               <ProjectCard
                 project={project}
                 index={index}
-                key={project.title}
+                copyIndex={copyIndex}
+                isClone={isClone}
+                key={`${copyIndex}-${project.title}`}
                 onOpen={openProject}
               />
-            ))}
+              ),
+            )}
           </ul>
         </div>
       </div>
