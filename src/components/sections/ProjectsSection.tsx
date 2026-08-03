@@ -239,6 +239,17 @@ function ProjectDialog({
               </div>
             )}
 
+            {project.contributions && project.contributions.length > 0 && (
+              <div className="project-dialog__group">
+                <h4>My contributions</h4>
+                <ul className="project-dialog__features">
+                  {project.contributions.map((contribution) => (
+                    <li key={contribution}>{contribution}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <ProjectActions project={project} />
           </div>
         </div>

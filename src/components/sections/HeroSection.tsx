@@ -66,7 +66,9 @@ export function HeroSection() {
               alt="Genesis Clabisellas in graduation attire"
             />
             <div>
-              <p className="developer-card__overline">Graduate / developer</p>
+              <p className="developer-card__overline">
+                Graduate / software engineer
+              </p>
               <h2 id="snapshot-title">{portfolio.name}</h2>
             </div>
           </div>
@@ -79,8 +81,8 @@ export function HeroSection() {
             ))}
           </dl>
           <p className="developer-card__caption">
-            Information Technology graduate building practical, collaborative
-            software.
+            Information Technology graduate applying software engineering to
+            practical, collaborative products.
           </p>
         </aside>
       </div>

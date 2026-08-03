@@ -34,7 +34,7 @@ export const portfolio: PortfolioContent = {
   name: 'Genesis Clabisellas',
   shortName: 'GC',
   professionalTitle:
-    'Junior Software Developer | Practical, Data-Informed Applications',
+    'Junior Software Engineer | Practical, Data-Informed Applications',
   introduction:
     'I build reliable web applications and data-driven tools, combining full-stack development with an analytical approach to real user problems.',
   navigation: [
@@ -48,7 +48,7 @@ export const portfolio: PortfolioContent = {
     { label: 'Contact', href: '#contact', availability: 'available' },
   ],
   hero: {
-    eyebrow: 'Software development · Data analytics',
+    eyebrow: 'Software engineering · Data analytics',
     primaryAction: {
       label: 'Explore featured work',
       href: '#projects',
@@ -65,16 +65,16 @@ export const portfolio: PortfolioContent = {
     phoneSingapore: phoneSingaporeLink,
   },
   snapshot: [
-    { label: 'Current focus', value: 'Junior software development' },
-    { label: 'Background', value: 'Data analytics' },
+    { label: 'Current focus', value: 'Junior software engineering' },
+    { label: 'Background', value: 'Software engineering · Data analytics' },
     { label: 'Capstone project', value: 'NASAM' },
   ],
   about: {
     label: '01 / About me',
     heading: 'A practical developer with an analytical foundation',
     paragraphs: [
-      'I am pursuing junior software-development opportunities after building a foundation in data analysis. I am focused on practical software: applications shaped around a clear problem and an understandable user need.',
-      'ApplyWiseAI, an AI-powered job-application assistant, is the current example of that direction. Developing it is helping me grow my software-development practice while exploring how AI can support a practical workflow.',
+      'I am pursuing junior software-engineering opportunities after building a foundation in data analysis. I am focused on practical software: applications shaped around a clear problem and an understandable user need.',
+      'ApplyWiseAI, an AI-powered job-application assistant, is the current example of that direction. Developing it is helping me grow my software-engineering practice while exploring how AI can support a practical workflow.',
     ],
     highlights: [
       {
@@ -167,7 +167,7 @@ export const portfolio: PortfolioContent = {
     label: '03 / Featured projects',
     heading: 'Software built around practical problems',
     introduction:
-      'A selection of individual and collaborative builds, led by the NASAM capstone project.',
+      'A selection of individual and collaborative builds, led by the NASAM capstone project and supported by contribution highlights from my current resume.',
     items: [
       {
         title: 'NASAM',
@@ -177,16 +177,24 @@ export const portfolio: PortfolioContent = {
           'The Non-Academic Scholar Application Management System is a five-person capstone project designed to move CIT-U scholarship applications, document handling, review, and reporting into one web-based workflow.',
         technologies: [
           'Next.js',
+          'React',
           'TypeScript',
-          'Node.js',
-          'Express',
+          'Express.js',
           'MongoDB',
-          'Tailwind CSS',
+          'JWT',
+          'Argon2',
+          'RBAC',
         ],
         features: [
           'Scholarship application and document workflow',
           'Role-based review and application management',
           'Email, PDF, CSV, and Excel reporting tools',
+        ],
+        contributions: [
+          'Collaborated in a five-developer team to digitize scholarship application workflows for Cebu Institute of Technology - University.',
+          'Built role-based full-stack features for applicants, OAS staff, department heads, and administrators.',
+          'Delivered application tracking, document uploads, interview scheduling, notifications, audit logs, and analytics dashboards.',
+          'Secured protected API routes with JWT, Argon2 password hashing, CORS, Helmet, cookies and sessions, and permission middleware.',
         ],
         status: 'Capstone project',
         repository: {
@@ -209,13 +217,20 @@ export const portfolio: PortfolioContent = {
           'Java',
           'Spring Boot',
           'PostgreSQL',
+          'NVIDIA API',
+          'Docker',
         ],
         features: [
           'Job and resume management',
           'Job-to-resume analysis',
           'Application tracking and tailored materials',
         ],
-        status: 'In development',
+        contributions: [
+          'Built a platform for saving resumes and job postings, generating AI-powered compatibility analyses, and tracking application progress.',
+          'Integrated NVIDIA Nemotron to identify matching and missing skills and generate cover letters grounded in each user resume.',
+          'Secured user data with Spring Security, Google OAuth, Argon2 password hashing, server-side sessions, CSRF protection, and user-scoped REST APIs.',
+        ],
+        status: 'Ongoing personal project - functional MVP',
         repository: {
           label: 'View ApplyWiseAI on GitHub',
           href: 'https://github.com/clabisellasg/ApplyWiseAI',
@@ -234,45 +249,26 @@ export const portfolio: PortfolioContent = {
           'React',
           'Java',
           'Spring Boot',
+          'Spring Security',
           'MongoDB',
-          'Firebase',
+          'Android',
+          'Retrofit',
+          'Gson',
+          'JWT',
         ],
         features: [
           'Pet profile management',
           'Search and matchmaking',
           'Messaging and scheduling',
         ],
+        contributions: [
+          'Implemented REST APIs for registration, login, pet profile CRUD, ownership-protected flows, and pet photo upload and retrieval.',
+          'Added authorization checks through the Spring Security context and integrated authenticated Android API calls using Retrofit and Gson.',
+        ],
         status: null,
         repository: {
           label: 'View Pawfect Match on GitHub',
           href: 'https://github.com/jannahlovelle/pawfect-match',
-        },
-        liveDemo: null,
-        image: null,
-        featured: false,
-      },
-      {
-        title: 'Student Performance Predictor',
-        summary:
-          'A machine-learning project for predicting student academic performance from multiple data factors.',
-        description:
-          'An end-to-end analysis pipeline that prepares student data, trains classification and regression models, evaluates results, and produces visualizations.',
-        technologies: [
-          'Python',
-          'pandas',
-          'scikit-learn',
-          'Matplotlib',
-          'Seaborn',
-        ],
-        features: [
-          'Student data preprocessing',
-          'Grade classification and score regression',
-          'Model evaluation and feature analysis',
-        ],
-        status: null,
-        repository: {
-          label: 'View predictor on GitHub',
-          href: 'https://github.com/clabisellasg/Student-Performance-Predictor',
         },
         liveDemo: null,
         image: null,
@@ -289,6 +285,7 @@ export const portfolio: PortfolioContent = {
           'Material UI',
           'Java',
           'Spring Boot',
+          'Spring Security',
           'MySQL',
           'JWT',
         ],
@@ -296,6 +293,10 @@ export const portfolio: PortfolioContent = {
           'Recipe and favorite management',
           'Personal meal-plan organization',
           'Authenticated user and admin workflows',
+        ],
+        contributions: [
+          'Built backend modules for recipes, meal plans, shopping lists, favorites, ratings, users, and administrator workflows.',
+          'Implemented JWT authentication, profile endpoints, recipe image uploads, recipe filters, and meal-plan management APIs.',
         ],
         status: 'Collaborative project',
         repository: {
@@ -389,7 +390,7 @@ export const portfolio: PortfolioContent = {
         institution: 'Cebu Institute of Technology - University',
         location: null,
         date: '2026-05',
-        dateLabel: 'Expected May 2026',
+        dateLabel: 'May 2026',
         details: [],
       },
     ],
@@ -400,13 +401,13 @@ export const portfolio: PortfolioContent = {
     introduction:
       'Download the verified resume for a concise overview of experience, education, projects, skills, and certifications.',
     download: resumeLink,
-    downloadFilename: 'genesis-clabisellas-resume.pdf',
+    downloadFilename: 'Genesis-Clabisellas-Software-Engineer-Resume.pdf',
   },
   contact: {
     label: '07 / Contact',
     heading: 'Let us start a conversation',
     introduction:
-      'For junior software-development opportunities or relevant professional conversations, reach out by email or phone, or connect through GitHub and Facebook.',
+      'For junior software-engineering opportunities or relevant professional conversations, reach out by email or phone, or connect through GitHub and Facebook.',
     methods: [
       {
         title: 'Email',
@@ -446,7 +447,7 @@ export const portfolio: PortfolioContent = {
     ],
   },
   footer: {
-    note: 'Junior software development and data analytics.',
+    note: 'Junior software engineering and data analytics.',
     backToTopLabel: 'Back to top',
   },
 }

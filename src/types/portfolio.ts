@@ -30,6 +30,7 @@ export type Project = {
   description: string
   technologies: string[]
   features: string[]
+  contributions?: string[]
   status: string | null
   repository: PortfolioLink | null
   liveDemo: PortfolioLink | null
