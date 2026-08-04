@@ -8,8 +8,8 @@ import {
   type MouseEvent,
   type PointerEvent,
   type RefObject,
-  type WheelEvent,
 } from 'react'
+import { FaGithub } from 'react-icons/fa6'
 import { portfolio } from '../../data/portfolio'
 import type { Project } from '../../types/portfolio'
 
@@ -96,6 +96,7 @@ function ProjectActions({ project }: { project: Project }) {
           target="_blank"
           rel="noopener noreferrer"
         >
+          <FaGithub aria-hidden="true" />
           {project.repository.label}
         </a>
       )}
@@ -285,7 +286,9 @@ export function ProjectsSection() {
     lastX: 0,
     distance: 0,
   })
+  const activePointerRef = useRef(-1)
   const suppressClickRef = useRef(false)
+  const autoScrollPositionRef = useRef(0)
   const [selectedProject, setSelectedProject] = useState<{
     project: Project
     index: number
@@ -318,6 +321,7 @@ export function ProjectsSection() {
       const previousBehavior = track.style.scrollBehavior
       track.style.scrollBehavior = 'auto'
       track.scrollLeft = left
+      autoScrollPositionRef.current = left
       track.style.scrollBehavior = previousBehavior
     },
     [],
@@ -430,9 +434,6 @@ export function ProjectsSection() {
     }
   }, [selectedProject])
 
-  const prefersReducedMotion = () =>
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
   const scrollByCard = (direction: -1 | 1) => {
     const track = trackRef.current
     const firstCard = track?.querySelector<HTMLElement>('.project-card')
@@ -442,11 +443,47 @@ export function ProjectsSection() {
     }
 
     const gap = Number.parseFloat(window.getComputedStyle(track).columnGap) || 0
-    track.scrollBy({
-      left: direction * (firstCard.getBoundingClientRect().width + gap),
-      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-    })
+    const nextPosition =
+      track.scrollLeft +
+      direction * (firstCard.getBoundingClientRect().width + gap)
+    track.scrollLeft = nextPosition
+    autoScrollPositionRef.current = track.scrollLeft
   }
+
+  useEffect(() => {
+    const track = trackRef.current
+
+    if (!track || !hasLoopingContent || selectedProject) {
+      return
+    }
+
+    let animationFrame = 0
+    let previousTimestamp = performance.now()
+    autoScrollPositionRef.current = track.scrollLeft
+
+    const advanceCarousel = (timestamp: number) => {
+      const elapsed = Math.min(timestamp - previousTimestamp, 64)
+      previousTimestamp = timestamp
+
+      if (
+        !document.hidden &&
+        activePointerRef.current === -1
+      ) {
+        autoScrollPositionRef.current += elapsed * 0.024
+        track.scrollLeft = autoScrollPositionRef.current
+      } else {
+        autoScrollPositionRef.current = track.scrollLeft
+      }
+
+      animationFrame = window.requestAnimationFrame(advanceCarousel)
+    }
+
+    animationFrame = window.requestAnimationFrame(advanceCarousel)
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame)
+    }
+  }, [hasLoopingContent, selectedProject])
 
   const handleTrackKeyDown = (event: KeyboardEvent<HTMLUListElement>) => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
@@ -455,25 +492,16 @@ export function ProjectsSection() {
     }
   }
 
-  const handleTrackWheel = (event: WheelEvent<HTMLUListElement>) => {
-    const track = trackRef.current
-
-    if (
-      !track ||
-      Math.abs(event.deltaX) >= Math.abs(event.deltaY) ||
-      event.deltaY === 0
-    ) {
-      return
-    }
-
-    event.preventDefault()
-    track.scrollLeft += event.deltaY
-  }
-
   const handlePointerDown = (event: PointerEvent<HTMLUListElement>) => {
-    if (event.pointerType !== 'mouse' || event.button !== 0) {
+    if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) {
       return
     }
+
+    if (event.pointerType !== 'mouse') {
+      return
+    }
+
+    activePointerRef.current = event.pointerId
 
     const track = trackRef.current
 
@@ -516,6 +544,10 @@ export function ProjectsSection() {
   const finishPointerDrag = useCallback((pointerId: number) => {
     const track = trackRef.current
     const drag = dragRef.current
+
+    if (activePointerRef.current === pointerId) {
+      activePointerRef.current = -1
+    }
 
     if (!track || drag.pointerId !== pointerId) {
       return
@@ -592,8 +624,9 @@ export function ProjectsSection() {
               className="projects-carousel__instructions"
               id="projects-carousel-instructions"
             >
-              Select a project to view its details. Drag, swipe, scroll, or use
-              the arrows to browse continuously.
+              Projects move continuously in a seamless loop. Select a project
+              to view its details, or drag, swipe, and use the arrows to browse
+              manually.
             </p>
             {hasLoopingContent && (
               <div className="projects-carousel__controls">
@@ -622,7 +655,6 @@ export function ProjectsSection() {
             aria-label="Project cards"
             onScroll={maintainLoopPosition}
             onKeyDown={handleTrackKeyDown}
-            onWheel={handleTrackWheel}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={(event) => finishPointerDrag(event.pointerId)}

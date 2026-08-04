@@ -1,7 +1,21 @@
+import {
+  FaEnvelope,
+  FaFacebookF,
+  FaGithub,
+  FaPhone,
+} from 'react-icons/fa6'
 import { portfolio } from '../../data/portfolio'
 import type { ContactMethod } from '../../types/portfolio'
 
 function ContactLink({ method }: { method: ContactMethod }) {
+  const Icon = method.title.startsWith('Phone')
+    ? FaPhone
+    : method.title === 'Email'
+      ? FaEnvelope
+      : method.title === 'GitHub'
+        ? FaGithub
+        : FaFacebookF
+
   return (
     <li>
       <a
@@ -11,11 +25,18 @@ function ContactLink({ method }: { method: ContactMethod }) {
         target={method.external ? '_blank' : undefined}
         rel={method.external ? 'noopener noreferrer' : undefined}
       >
-        <span className="contact-method__type">{method.title}</span>
-        <strong>{method.value}</strong>
-        <span className="contact-method__description">
-          {method.description}
-          <span aria-hidden="true"> →</span>
+        <span className="contact-method__icon" aria-hidden="true">
+          <Icon />
+        </span>
+        <span className="contact-method__content">
+          <span className="contact-method__type">{method.title}</span>
+          <strong>{method.value}</strong>
+          <span className="contact-method__description">
+            {method.description}
+          </span>
+        </span>
+        <span className="contact-method__arrow" aria-hidden="true">
+          ↗
         </span>
       </a>
     </li>

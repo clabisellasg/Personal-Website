@@ -1,3 +1,4 @@
+import { FaGithub } from 'react-icons/fa6'
 import { portfolio } from '../../data/portfolio'
 
 export function HeroSection() {
@@ -41,6 +42,7 @@ export function HeroSection() {
                 className="button button--secondary"
                 href={hero.secondaryAction.href}
               >
+                <FaGithub aria-hidden="true" />
                 {hero.secondaryAction.label}
               </a>
             )}

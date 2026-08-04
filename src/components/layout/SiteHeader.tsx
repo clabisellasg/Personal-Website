@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
+import { FaCode } from 'react-icons/fa6'
 import { portfolio } from '../../data/portfolio'
 import type { NavigationItem } from '../../types/portfolio'
 
@@ -187,7 +188,7 @@ export function SiteHeader() {
           onClick={closeMenu}
         >
           <span className="brand__mark" aria-hidden="true">
-            {portfolio.shortName}
+            <FaCode />
           </span>
           <span className="brand__name">{portfolio.name}</span>
         </a>
